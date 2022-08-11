@@ -12,15 +12,15 @@ public class Main {
 
 
         while (true) {
-            System.out.print("이용할 대중교통을 선택하세요 : 1. 버스 / 2. 택시 ");
+            System.out.print("이용할 대중교통을 선택하세요 : 1. 버스 / 2. 택시 / -1. 종료 ");
             num = sc.nextInt();
             Random random = new Random();
             switch (num) {
                 case 1:
                     while (true) {
-                        System.out.println("------------------------------------------------------------------------------------------");
-                        System.out.println("1. 버스 생성 , 2. 버스 정보 , 3. 상태 변경, 4. 속도 변경 , 5. 기름 변경, 6. 승객 탑승, 0. 운행 종료 ");
-                        System.out.println("------------------------------------------------------------------------------------------");
+                        System.out.println("--------------------------------------------------------------------------------------------------");
+                        System.out.println("1. 버스 생성 , 2. 승객 탑승 , 3. 버스 정보,  4. 속도 변경 , 5. 기름 변경 , 6. 상태 변경, 7. 운행 종료, 0. EXIT");
+                        System.out.println("--------------------------------------------------------------------------------------------------");
                         num = sc.nextInt();
                         switch (num) {
                             case 1:
@@ -29,7 +29,18 @@ public class Main {
                                 bus.bus_Map.put(transport.get_number(), bus.status);
                                 System.out.println(transport.number + "번 버스가 생성되었습니다.");
                                 break;
+
                             case 2:
+                                if (bus.Non_Bus() == false)
+                                    break;
+                                else {
+                                    System.out.print("탑승 시킬 승객 수 : ");
+                                    int people = sc.nextInt();
+                                    bus.Ride_people(people);
+                                    break;
+                                }
+
+                            case 3:
                                 if (bus.Non_Bus() == false)
                                     break;
                                 else {
@@ -37,17 +48,15 @@ public class Main {
                                     System.out.println("탑승 승객 수 : " + bus.people);
                                     System.out.println("잔여 승객 수 : " + bus.residual_people());
                                     System.out.println("요금 확인 : " + bus.bus_fee());
-                                    System.out.println("속도 : " + bus.speed);
-                                    System.out.println("기름 : " + bus.oil);
                                     break;
                                 }
-                            case 3:
-                                bus.Status();
-                                break;
+
+
                             case 4:
                                 if (bus.Non_Bus() == false)
                                     break;
                                 else {
+                                    System.out.println("현재 속도 : "+ bus.speed);
                                     System.out.print("증감할 속도를 입력하세요 : ");
                                     int ch_speed = sc.nextInt();
                                     bus.Change_Speed(ch_speed);
@@ -61,6 +70,7 @@ public class Main {
                                 if (bus.Non_Bus() == false)
                                     break;
                                 else {
+                                    System.out.println("현재 기름 : "+bus.oil);
                                     System.out.print("기름 변경 : ");
                                     int ch_oil = sc.nextInt();
                                     bus.Change_Oil(ch_oil);
@@ -72,28 +82,28 @@ public class Main {
                                     }
                                     break;
                                 }
-
                             case 6:
+                                bus.Status();
+                                break;
+
+                            case 7:
                                 if (bus.Non_Bus() == false)
                                     break;
                                 else {
-                                    System.out.print("탑승 시킬 승객 수 : ");
-                                    int people = sc.nextInt();
-                                    bus.Ride_people(people);
-                                    break;
+                                    bus.end();
                                 }
+
                         }
                         if (num == 0) {
-
                             break;
                         }
                     }
                     break;
                 case 2:
                     while (true) {
-                        System.out.println("------------------------------------------------------------------------------------------");
+                        System.out.println("--------------------------------------------------------------------------------------");
                         System.out.println("1. 택시 생성 , 2. 승객 탑승 , 3. 택시 정보 , 4. 속도 변경 , 5. 기름 변경, 6. 요금 결제 0. EXIT");
-                        System.out.println("------------------------------------------------------------------------------------------");
+                        System.out.println("--------------------------------------------------------------------------------------");
                         num = sc.nextInt();
                         switch (num) {
                             case 1:
@@ -148,10 +158,7 @@ public class Main {
                                     taxi.Change_Oil(ch_oil);
                                     if (taxi.oil > 0)
                                         System.out.println("남은 기름이 변경되었습니다 : " + taxi.oil);
-                                    else {
-                                        System.out.println("남은 기름 : " + taxi.oil);
-                                        break;
-                                    }
+
                                     break;
                                 }
 
@@ -166,7 +173,11 @@ public class Main {
                         if (num == 0)
                             break;
                     }
+                    break;
+
             }
+            if(num==-1) break;
         }
+
     }
 }
