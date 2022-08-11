@@ -1,0 +1,121 @@
+package org.example;
+
+import java.util.*;
+
+public class Bus extends transport {
+    public int max_people = 30;
+    private int fee = 1000;
+    public String status = "운행중";
+    transport transport = new transport();
+
+    // 운행중인 버스가 없을 때
+    protected boolean Non_Bus() {
+
+        System.out.print("버스 리스트 : ");
+        bus_Map.forEach((key, value) -> {
+            System.out.println(key + " : " + value + " ");
+        });
+
+        if (getKey(bus_Map, "운행중") == null) {
+            System.out.println("운행중인 버스가 없습니다.");
+            return false;
+
+        }
+        System.out.print("\n버스 번호를 입력하세요 : ");
+        super.change_number = sc.nextInt();
+        if (getKey(bus_Map, "운행중") != change_number) {
+            // 선택한 버스가 없을 때
+            if (bus_Map.containsKey(change_number) == false)
+                System.out.println(change_number + "버스는 현재 운영되지 않습니다.");
+            return false;
+        } else
+            return true;
+    }
+
+    // 버스 상태 변경
+    public void Status() {
+        Non_Bus();
+
+        String get_start_bus = (String) bus_Map.get(change_number);
+
+        // 선택한 버스가 운행중 일 때
+        if (bus_Map.containsKey(change_number) == true) {
+            if (get_start_bus == "운행중") {
+                bus_Map.replace(change_number, "차고지");
+                System.out.println(change_number + "버스 상태가 차고지로 바뀌었습니다.");
+                this.people = 0;
+                this.speed = 10;
+            // 기름이 10보다 낮을 때
+            } else if(super.oil < 10) {
+                System.out.println("기름이 10보다 낮아 운행할 수 없습니다.");
+            }
+            // 선택한 버스가 운행중이 아닐 
+            else if(getKey(bus_Map, "운행중") == null){
+                System.out.print("버스 번호를 입력해 주세요 : ");
+                change_number = sc.nextInt();
+                bus_Map.replace(change_number, "운행중");
+
+                System.out.println(change_number + "버스 상태가 운행중으로 바뀌었습니다.");
+            }
+
+        }
+    }
+
+    // 버스 요금 계산
+    public int bus_fee() {
+        return fee * super.people;
+    }
+
+    // 잔여 승객 수
+    public int residual_people() {
+        return max_people - this.people;
+    }
+    // 승객 탑승
+    public void Ride_people(int people) {
+        super.people += people;
+        if (people > this.max_people) {
+            super.people -= people;
+            System.out.println("탑승 인원이 초과되었습니다.");
+        } else if (people == this.max_people)
+            System.out.println("총 탑승인원이 " + people + "명으로 최대탑승 인원이 되었습니다.");
+        else
+            System.out.println("총 탑승 인원  : " + people);
+    }
+
+    
+    // 속도 증감
+    public int Change_Speed(int speed) {
+        if(super.oil < 10){
+            System.out.println("주유량을 확인해 주세요. 기름이 10 이상이어야 운행 할 수 있습니다.");
+            System.out.println(change_number + "버스가 차고지로 상태가 변경되었습니다.");
+            bus_Map.replace(change_number,"차고지");
+            people = 0;
+            super.speed = 10;
+            return super.oil;
+        }
+        // 만약 속도를 0이하로 떨어뜨렸을 시 속도를 0으로 리턴
+        else if(super.speed < 0){
+            System.out.println("현재 속도는 0 입니다.");
+            return 0;
+        }
+        // 만약 속도를 0이하로 떨어뜨렸을 시 속도를 0으로 리턴
+        else
+            return Speed(speed);
+    }
+    
+    // 주유 증감
+    public int Change_Oil(int oil) {
+        int change_oil = this.oil + oil;
+        if (change_oil <= 0) {
+            System.out.println("기름이 없어 운행을 종료합니다.");
+            bus_Map.replace(change_number, "차고지");
+            this.people = 0;
+            this.speed = 10;
+            return this.oil = 0;
+        }
+        else
+            return Oil(oil);
+
+    }
+
+}
