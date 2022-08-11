@@ -6,17 +6,16 @@ import java.util.Scanner;
 
 public class transport {
     public int number, people, change_number;
-    public int speed = 10;
+    public int speed = 0;
     public int oil = 100;
     public int max_people;
     Map<Integer,String> bus_Map = new HashMap<Integer,String>();
     Map<Integer,String> taxi_Map = new HashMap<Integer,String>();
     Scanner sc = new Scanner(System.in);
-    
     public void set_number(int number) {
         this.number = number;
     }
-    
+
     public int get_number() {
         return this.number;
     }
@@ -31,14 +30,10 @@ public class transport {
         }
         return null;
     }
-    
-    // 속도
     public int Speed(int speed) {
         return this.speed += speed;
 
     }
-    
-    // 기름
     public int Oil(int oil) {
         if(this.oil + oil < 10){
             System.out.println("주유가 필요합니다.");
