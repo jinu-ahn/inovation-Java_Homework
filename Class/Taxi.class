@@ -1,0 +1,139 @@
+package org.example;
+
+public class Taxi extends transport {
+    public int fee = 3000;
+    public int base_fee = 1000;
+    public int sum_fee =0;
+    public int max_people = 4;
+    public int address_by_km;
+    public String address;
+    public String status = "일반";
+
+
+    public String address(String address) {
+        return this.address = address;
+    }
+
+
+    protected boolean Non_Taxi() {
+        // 택시 리스트 출력
+        System.out.print("택시 리스트 : ");
+        taxi_Map.forEach((key, value) -> {
+            System.out.println(key + " : " + value + " ");
+        });
+        
+        // 운행중인 택시가 없을 때
+        if (getKey(taxi_Map, "운행중") == null) {
+            System.out.println("운행중인 택시가 없습니다.");
+            return false;
+        }
+
+        System.out.print("\n택시 번호를 입력하세요 : ");
+        super.change_number = sc.nextInt();
+        if (getKey(taxi_Map, "운행중") != change_number) {
+            // 선택한 택시가 없을 때
+            if (taxi_Map.containsKey(change_number) == false)
+                System.out.println(change_number + "택시는 현재 운영되지 않습니다.");
+            return false;
+        } else
+            return true;
+    }
+
+    // 잔여 승객 수
+    public int residual_people() {
+        return max_people - this.people;
+    }
+    
+    // 승객 탑승
+    public void Ride_people() {
+        System.out.print("\n택시 번호를 입력하세요 : ");
+        change_number = sc.nextInt();
+        String get_start_taxi = (String) taxi_Map.get(change_number);
+        if (taxi_Map.containsKey(change_number) == true) {
+        
+            if (get_start_taxi == "일반") {
+                System.out.print("탑승 시킬 승객 수 : ");
+                int people = sc.nextInt();
+                System.out.print("목적지 : ");
+                String address = sc.next();
+                System.out.print("목적지까지 거리 : " );
+                int address_by_km = sc.nextInt();
+                this.address = address;
+                this.address_by_km = address_by_km;
+                super.people += people;
+                
+                // 탑승 인원 초과
+                if (people > this.max_people) {
+                    super.people -= people;
+                    System.out.println("탑승 인원이 초과되었습니다.");
+                    taxi_Map.replace(change_number, "일반");
+                }
+                // 운행 시작
+                else {
+                    taxi_Map.replace(change_number, "운행중");
+                    System.out.println("운행 시작합니다.");
+                    System.out.println("목적지 : " + address);
+                    System.out.println("목저지까지의 거리 : " + address_by_km);
+                }
+                // 탑승 인원이 4명 일 때
+                if (people == this.max_people)
+                    System.out.println("총 탑승인원이 " + people + "명으로 최대탑승 인원이 되었습니다.");
+                else
+                    System.out.println("총 탑승 인원  : " + people);
+                    // 택시의 상태가 운행불가 상태일 때
+            } else if (get_start_taxi == "운행불가"){
+                System.out.println(change_number + "택시는 기름이 없어 운행이 불가합니다.");
+            }
+            // 택시가 운행중일때
+            else {
+                System.out.println(change_number + "택시는 현재 운행중 입니다.");
+            }
+        }
+        // 택시가 없을 때
+        else
+            System.out.println(change_number + "번 택시는 운행하지 않습니다.");
+    }
+    // 요금
+    public int taxi_fee() {
+        int taxi_fee = this.fee;
+        for(int i=1; i<address_by_km; i++) {
+            taxi_fee += base_fee;
+        }
+        return taxi_fee;
+
+    }
+    // 총 요금
+    public int sum_fee() {
+        System.out.println("운행을 종료합니다.");
+        System.out.println("주유량 : " + super.oil);
+        taxi_Map.replace(change_number,"일반");
+        people = 0;
+        speed = 10;
+        return this.sum_fee += taxi_fee();
+    }
+    // 속도 증감
+    public int Change_Speed(int speed) {
+        // 만약 속도를 0이하로 떨어뜨렸을 시 속도를 0으로 리턴
+        if(super.speed < 0){
+            System.out.println("현재 속도는 0 입니다.");
+            return 0;
+        }
+        else
+            return Speed(speed);
+    }
+    
+    // 
+    public int Change_Oil(int oil) {
+        int change_oil = this.oil + oil;
+        if (change_oil == 0) {
+            System.out.println("기름이 없어 운행을 종료합니다.");
+            taxi_Map.replace(change_number, "운행불가");
+            this.people = 0;
+            this.speed = 10;
+            return this.oil = 0;
+        }
+        else
+            return Oil(oil);
+
+    }
+}
