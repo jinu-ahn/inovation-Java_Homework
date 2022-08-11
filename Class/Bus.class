@@ -1,6 +1,6 @@
 package org.example;
 
-import java.util.*;
+import java.sql.SQLOutput;
 
 public class Bus extends transport {
     public int max_people = 30;
@@ -45,11 +45,10 @@ public class Bus extends transport {
                 System.out.println(change_number + "버스 상태가 차고지로 바뀌었습니다.");
                 this.people = 0;
                 this.speed = 10;
-            // 기름이 10보다 낮을 때
+
             } else if(super.oil < 10) {
                 System.out.println("기름이 10보다 낮아 운행할 수 없습니다.");
             }
-            // 선택한 버스가 운행중이 아닐 
             else if(getKey(bus_Map, "운행중") == null){
                 System.out.print("버스 번호를 입력해 주세요 : ");
                 change_number = sc.nextInt();
@@ -82,9 +81,9 @@ public class Bus extends transport {
             System.out.println("총 탑승 인원  : " + people);
     }
 
-    
-    // 속도 증감
+
     public int Change_Speed(int speed) {
+    // 기름 10 미만일때 운행 불가
         if(super.oil < 10){
             System.out.println("주유량을 확인해 주세요. 기름이 10 이상이어야 운행 할 수 있습니다.");
             System.out.println(change_number + "버스가 차고지로 상태가 변경되었습니다.");
@@ -102,8 +101,7 @@ public class Bus extends transport {
         else
             return Speed(speed);
     }
-    
-    // 주유 증감
+    // 기름 
     public int Change_Oil(int oil) {
         int change_oil = this.oil + oil;
         if (change_oil <= 0) {
@@ -116,6 +114,15 @@ public class Bus extends transport {
         else
             return Oil(oil);
 
+    }
+    public void end() {
+        System.out.println("운행을 종료합니다.");
+        System.out.println("주유량 : " + super.oil);
+        bus_Map.replace(change_number,"차고지");
+        String get_start_bus = (String) bus_Map.get(change_number);
+        System.out.println("상태 : " + get_start_bus);
+        people = 0;
+        speed = 10;
     }
 
 }
